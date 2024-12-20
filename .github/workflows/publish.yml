@@ -29,4 +29,4 @@ jobs:
       - name: Pack
         run: dotnet pack -c Debug --no-build --output packages /p:Version=${VERSION}
       - name: Push packages to NuGet
-        run: dotnet nuget push "packages/*.nupkg" --source github --api-key=${{ secrets.GITHUB_TOKEN }}
+        run: dotnet nuget push "packages/*.nupkg" --source github --api-key=${{ secrets.GITHUB_TOKEN }} --skip-duplicate
