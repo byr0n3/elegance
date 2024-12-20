@@ -1,0 +1,26 @@
+<Project>
+
+	<PropertyGroup>
+		<Company>Byrone</Company>
+		<Authors>Byrone</Authors>
+
+		<TargetFramework>net9.0</TargetFramework>
+		<LangVersion>preview</LangVersion>
+		<Nullable>enable</Nullable>
+		<Features>strict</Features>
+		<AnalysisLevel>latest</AnalysisLevel>
+
+		<DisableImplicitNamespaceImports>true</DisableImplicitNamespaceImports>
+		<EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
+		<EnableUnsafeUTF7Encoding>false</EnableUnsafeUTF7Encoding>
+		<NoWarn>$(NoWarn);MA0016;MA0046;MA0048</NoWarn>
+
+		<IsPublishable>false</IsPublishable>
+		<IsPackable>true</IsPackable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="JetBrains.Annotations" Version="2024.3.0"/>
+	</ItemGroup>
+
+</Project>

@@ -1,0 +1,32 @@
+name: Publish packages
+
+on:
+  push:
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+      - name: Set VERSION variable
+        run: echo "VERSION=${GITHUB_REF/refs\/tags\/}" >> $GITHUB_ENV
+      - name: Login to the GitHub NuGet registry
+        run: dotnet nuget add source --username ${{ github.actor }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${{ github.actor }}/index.json"
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build -c Debug --no-restore /p:Version=${VERSION}
+      - name: Pack
+        run: dotnet pack -c Debug --no-build --output packages /p:Version=${VERSION}
+      - name: Push packages to NuGet
+        run: dotnet nuget push "packages/*.nupkg" --source github --api-key=${{ secrets.GITHUB_TOKEN }}

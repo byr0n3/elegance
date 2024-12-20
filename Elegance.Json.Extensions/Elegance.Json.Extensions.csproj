@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<Import Project="../Elegance.props"/>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App"/>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Elegance.Json\Elegance.Json.csproj"/>
+	</ItemGroup>
+
+</Project>
