@@ -20,7 +20,7 @@ namespace Elegance.Enums
 				builder.AppendPop();
 				builder.AppendLine("}");
 
-				builder.AppendLine($"public static string GetValue({@enum.Name} value) {{");
+				builder.AppendLine($"[NotNull] public static string GetValue({@enum.Name} value) {{");
 				builder.AppendPush();
 				{
 					EnumGenerator.AppendEnumParserStatement(

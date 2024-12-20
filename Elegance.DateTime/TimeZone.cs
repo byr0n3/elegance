@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 
-namespace Elegance.Utilities
+namespace Elegance.DateTime
 {
 	[PublicAPI]
 	public static class TimeZone

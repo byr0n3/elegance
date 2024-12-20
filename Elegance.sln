@@ -26,6 +26,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elegance.AspNet", "Elegance
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elegance.Utilities", "Elegance.Utilities\Elegance.Utilities.csproj", "{AE6DAE3A-3AB5-42FB-9107-FE9EB7763568}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elegance.Extensions", "Elegance.Extensions\Elegance.Extensions.csproj", "{A99B136C-E15C-44C2-81E6-72D11BFED652}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elegance.DateTime", "Elegance.DateTime\Elegance.DateTime.csproj", "{E3653470-8E37-4853-B329-0F62DB5A3102}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,5 +64,13 @@ Global
 		{AE6DAE3A-3AB5-42FB-9107-FE9EB7763568}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE6DAE3A-3AB5-42FB-9107-FE9EB7763568}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE6DAE3A-3AB5-42FB-9107-FE9EB7763568}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A99B136C-E15C-44C2-81E6-72D11BFED652}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A99B136C-E15C-44C2-81E6-72D11BFED652}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A99B136C-E15C-44C2-81E6-72D11BFED652}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A99B136C-E15C-44C2-81E6-72D11BFED652}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3653470-8E37-4853-B329-0F62DB5A3102}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3653470-8E37-4853-B329-0F62DB5A3102}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3653470-8E37-4853-B329-0F62DB5A3102}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3653470-8E37-4853-B329-0F62DB5A3102}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
