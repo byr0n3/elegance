@@ -49,13 +49,13 @@ namespace Elegance.Enums
 				  		type == typeof({{@enum.Name}});
 				  
 				  	public override JsonConverter CreateConverter(System.Type _, JsonSerializerOptions __) =>
-				  		JsonGenderConverterFactory.converter;
+				  		Json{{@enum.Name}}ConverterFactory.converter;
 				  
 				  	public sealed class Converter : JsonConverter<{{@enum.Name}}>
 				  	{
 				  		public Converter() { }
 				  
-				  		public override Gender Read(ref Utf8JsonReader reader, System.Type _, JsonSerializerOptions __)
+				  		public override {{@enum.Name}} Read(ref Utf8JsonReader reader, System.Type _, JsonSerializerOptions __)
 				  		{
 				  			if (reader.TokenType != JsonTokenType.String)
 				  			{
@@ -71,12 +71,12 @@ namespace Elegance.Enums
 				  			{{read}}
 				  		}
 				  
-				  		public override void Write(Utf8JsonWriter writer, Gender value, JsonSerializerOptions _)
+				  		public override void Write(Utf8JsonWriter writer, {{@enum.Name}} value, JsonSerializerOptions _)
 				  		{
 				  			writer.WriteRawValue(Converter.GetWriteValue(value));
 				  		}
 				  
-				  		private static string GetWriteValue(Gender value)
+				  		private static string GetWriteValue({{@enum.Name}} value)
 				  		{
 				  			{{write}}
 				  		}
