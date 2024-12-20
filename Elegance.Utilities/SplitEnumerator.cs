@@ -1,10 +1,12 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using JetBrains.Annotations;
 
 namespace Elegance.Utilities
 {
+	[PublicAPI]
 	[StructLayout(LayoutKind.Sequential)]
-	internal ref struct SplitEnumerator
+	public ref struct SplitEnumerator
 	{
 		private System.ReadOnlySpan<char> span;
 		private readonly char separator;

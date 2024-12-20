@@ -6,8 +6,9 @@ using JetBrains.Annotations;
 
 namespace Elegance.Utilities
 {
+	[PublicAPI]
 	[MustDisposeResource]
-	internal readonly struct RentedArray<T> : System.IDisposable
+	public readonly struct RentedArray<T> : System.IDisposable
 	{
 		private readonly T[]? array;
 
