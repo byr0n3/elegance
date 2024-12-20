@@ -20,7 +20,11 @@ namespace Elegance.Enums
 				builder.AppendPop();
 				builder.AppendLine("}");
 
-				builder.AppendLine($"[NotNull] public static string GetValue({@enum.Name} value) {{");
+				builder.AppendLine(
+					$$"""
+					  #nullable disable
+					  public static string GetValue({{@enum.Name}} value) {
+					  """);
 				builder.AppendPush();
 				{
 					EnumGenerator.AppendEnumParserStatement(
@@ -32,7 +36,12 @@ namespace Elegance.Enums
 					);
 				}
 				builder.AppendPop();
-				builder.AppendLine("}");
+				builder.AppendLine(
+					"""
+					}
+					#nullable enable
+					"""
+				);
 			}
 			builder.AppendPop();
 			builder.AppendLine("}");
