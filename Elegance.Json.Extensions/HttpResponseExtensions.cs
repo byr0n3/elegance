@@ -13,20 +13,24 @@ namespace Elegance.Json.Extensions
 	public static class JsonExtensions
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Task WriteJsonAsync<T>(this HttpResponse @this, T value, CancellationToken token = default)
+		public static Task WriteJsonAsync<T>(this HttpResponse @this,
+											 T value,
+											 int statusCode = StatusCodes.Status200OK,
+											 CancellationToken token = default)
 			where T : IJsonSerializable<T>
 		{
-			JsonExtensions.SetHeaders(@this);
+			JsonExtensions.SetHeaders(@this, statusCode);
 
 			return JsonSerializer.SerializeAsync(@this.BodyWriter, value, T.TypeInfo, token);
 		}
 
 		public static async Task WriteJsonAsync<T>(this HttpResponse @this,
 												   IAsyncEnumerable<T> enumerable,
+												   int statusCode = StatusCodes.Status200OK,
 												   CancellationToken token = default)
 			where T : IJsonSerializable<T>
 		{
-			JsonExtensions.SetHeaders(@this);
+			JsonExtensions.SetHeaders(@this, statusCode);
 
 			var writer = new Utf8JsonWriter(@this.BodyWriter);
 
@@ -44,9 +48,9 @@ namespace Elegance.Json.Extensions
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private static void SetHeaders(HttpResponse response)
+		private static void SetHeaders(HttpResponse response, int statusCode)
 		{
-			response.StatusCode = StatusCodes.Status200OK;
+			response.StatusCode = statusCode;
 			response.Headers.ContentType = MediaTypeNames.Application.Json;
 		}
 	}
