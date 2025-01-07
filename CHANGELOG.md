@@ -1,3 +1,7 @@
+# v0.1.3
+
+- Added the ability to customize the written status code when writing JSON data
+
 # v0.1.2
 
 - Added `Elegance.DateTime` project, containing utilities for `System.DateOnly` and `System.DateTime` (localizing, timezones, etc).
