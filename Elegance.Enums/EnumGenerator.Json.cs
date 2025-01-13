@@ -1,3 +1,5 @@
+using System.Linq;
+
 namespace Elegance.Enums
 {
 	public sealed partial class EnumGenerator
@@ -27,6 +29,8 @@ namespace Elegance.Enums
 			var write = builder.ToString();
 
 			builder.Clear();
+
+			var valueMax = @enum.Fields.Max(static (f) => f.Value.Length);
 
 			builder.Append(
 				// language=csharp
@@ -62,7 +66,7 @@ namespace Elegance.Enums
 				  				return default;
 				  			}
 				  
-				  			System.Span<char> buffer = stackalloc char[16];
+				  			System.Span<char> buffer = stackalloc char[{{valueMax}}];
 				  
 				  			var read = reader.CopyString(buffer);
 				  
