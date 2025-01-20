@@ -39,7 +39,7 @@ namespace Elegance.Icons
 			var builder = new IndentedSourceBuilder();
 
 			builder.AppendLine(
-				// language=sharp
+				// language=csharp
 				"""
 				using Microsoft.AspNetCore.Components;
 				using System.Diagnostics.CodeAnalysis;

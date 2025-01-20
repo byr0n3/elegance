@@ -5,17 +5,19 @@
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
 		<PublishAot>true</PublishAot>
-		<InvariantGlobalization>true</InvariantGlobalization>
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<AdditionalFiles Include="icons/*.svg"/>
+		<AdditionalFiles Include="localization/*.lang.json"/>
 
 		<ProjectReference Include="..\Elegance.Json\Elegance.Json.csproj"/>
-		
+		<ProjectReference Include="..\Elegance.Utilities\Elegance.Utilities.csproj"/>
+
 		<ProjectReference Include="..\Elegance.Enums\Elegance.Enums.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
 		<ProjectReference Include="..\Elegance.Icons\Elegance.Icons.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+		<ProjectReference Include="..\Elegance.Localization\Elegance.Localization.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
 	</ItemGroup>
 
 </Project>

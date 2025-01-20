@@ -1,0 +1,8 @@
+{
+  "hello": "Hello",
+  "yes": "Yes",
+  "no": "No",
+  "greeting": "Hello {0}! How are you?",
+  "date": "Today is: {0}.",
+  "year": "The current year is: {0:Y}"
+}

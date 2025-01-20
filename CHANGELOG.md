@@ -1,3 +1,8 @@
+# v0.2.0
+
+- Added `Elegance.Localization`, a Source Generator for working with localized text. See the `README.md` file in the
+  project folder for more information and usage.
+
 # v0.1.5
 
 - Added `InterpolatedStringBuilder` to `Elegance.Utilities`. Usage:
