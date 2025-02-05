@@ -1,3 +1,7 @@
+# v0.2.1
+
+- Added `System.Collections.Generic.KeyValuePair<string, string>[] Values` to the `*.EnumData.g.cs` output of `Elegance.Enums`.
+
 # v0.2.0
 
 - Added `Elegance.Localization`, a Source Generator for working with localized text. See the `README.md` file in the
