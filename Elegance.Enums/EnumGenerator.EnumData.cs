@@ -7,6 +7,17 @@ namespace Elegance.Enums
 			builder.AppendLine($"public static class {@enum.Name}EnumData {{");
 			builder.AppendPush();
 			{
+				builder.AppendLine("public static readonly System.Collections.Generic.KeyValuePair<string, string>[] Values = [");
+				builder.AppendPush();
+				{
+					foreach (var field in @enum.Fields)
+					{
+						builder.AppendLine($"new(\"{field.Label}\", \"{field.Value}\"),");
+					}
+				}
+				builder.AppendPop();
+				builder.AppendLine("];");
+
 				builder.AppendLine($"public static {@enum.Name} FromValue(string value) {{");
 				builder.AppendPush();
 				{
@@ -18,13 +29,9 @@ namespace Elegance.Enums
 					);
 				}
 				builder.AppendPop();
-				builder.AppendLine("}");
+				builder.AppendLine('}');
 
-				builder.AppendLine(
-					$$"""
-					  #nullable disable
-					  public static string GetValue({{@enum.Name}} value) {
-					  """);
+				builder.AppendLine($"public static string GetValue({@enum.Name} value) {{");
 				builder.AppendPush();
 				{
 					EnumGenerator.AppendEnumParserStatement(
@@ -36,15 +43,10 @@ namespace Elegance.Enums
 					);
 				}
 				builder.AppendPop();
-				builder.AppendLine(
-					"""
-					}
-					#nullable enable
-					"""
-				);
+				builder.AppendLine('}');
 			}
 			builder.AppendPop();
-			builder.AppendLine("}");
+			builder.AppendLine('}');
 		}
 	}
 }

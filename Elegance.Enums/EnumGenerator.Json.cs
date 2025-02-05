@@ -30,7 +30,7 @@ namespace Elegance.Enums
 
 			builder.Clear();
 
-			var valueMax = @enum.Fields.Max(static (f) => f.Value.Length);
+			var valueMaxLength = @enum.Fields.Max(static (f) => f.Value.Length);
 
 			builder.Append(
 				// language=csharp
@@ -66,7 +66,7 @@ namespace Elegance.Enums
 				  				return default;
 				  			}
 				  
-				  			System.Span<char> buffer = stackalloc char[{{valueMax}}];
+				  			System.Span<char> buffer = stackalloc char[{{valueMaxLength}}];
 				  
 				  			var read = reader.CopyString(buffer);
 				  

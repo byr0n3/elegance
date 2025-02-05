@@ -48,6 +48,12 @@ namespace Elegance.Enums
 			return this;
 		}
 
+		public IndentedSourceBuilder AppendLine(char? @char)
+		{
+			this.AppendLevel(this.level).Append(@char).Append('\n');
+			return this;
+		}
+
 		public void Clear()
 		{
 			this.builder.Clear();
