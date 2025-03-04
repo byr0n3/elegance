@@ -1,6 +1,12 @@
+# v0.2.2
+
+- Added `CharSpanBuilder` to `Elegance.Utilities`, which can be used to write to `System.Span<char>` buffers inorder to
+  create a UTF string.
+
 # v0.2.1
 
-- Added `System.Collections.Generic.KeyValuePair<string, string>[] Values` to the `*.EnumData.g.cs` output of `Elegance.Enums`.
+- Added `System.Collections.Generic.KeyValuePair<string, string>[] Values` to the `*.EnumData.g.cs` output of
+  `Elegance.Enums`.
 
 # v0.2.0
 
