@@ -1,3 +1,16 @@
+# v0.3.0
+
+- Created `Elegance.AspNet.Authentication`
+	- This package adds core services and utilities for working with authentication and user claims/data.
+	- For information how to use this package,
+	  read [it's README.md](https://github.com/byr0n3/elegance/blob/main/Elegance.AspNet.Authentication/README.md).
+- Refactored `Elegance.Enums`
+	- Added `FromValue` overloads for `System.ReadOnlySpan<char>` and `System.ReadOnlySpan<byte>`.
+	- Optimized generated `JsonConverter`.
+		- Keep in mind that source generated JSON has difficulty to use source generated converters,
+		  see [this example](https://github.com/byr0n3/elegance/blob/main/Elegance.Examples/Gender.cs).
+	- The generated `Values` property is now a `FrozenDictionary<TEnum, string>` for usability reasons.
+
 # v0.2.2
 
 - Added `CharSpanBuilder` to `Elegance.Utilities`, which can be used to write to `System.Span<char>` buffers inorder to
