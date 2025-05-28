@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Text;
 using System.Threading;
 using Elegance.Enums.Extensions;
 using Elegance.Enums.Sources;
@@ -31,7 +32,7 @@ namespace Elegance.Enums
 				return;
 			}
 
-			var builder = new IndentedSourceBuilder();
+			var builder = new StringBuilder();
 
 			foreach (var @enum in enums)
 			{
@@ -42,6 +43,8 @@ namespace Elegance.Enums
 				builder.AppendLine(
 					// language=csharp
 					$"""
+					 using System.Collections.Frozen;
+					 using System.Collections.Generic;
 					 using System.Diagnostics.CodeAnalysis;
 					 using System.Text.Json;
 					 using System.Text.Json.Serialization;
@@ -122,6 +125,9 @@ namespace Elegance.Enums
 			public required string Namespace { get; init; }
 
 			public required List<Field> Fields { get; init; }
+
+			public string FullName =>
+				$"{this.Namespace}.{this.Name}";
 
 			public readonly struct Field
 			{
