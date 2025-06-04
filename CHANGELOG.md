@@ -1,3 +1,8 @@
+# v0.3.1
+
+- Added `string FromLabel(System.ReadOnlySpan<char>)` to the Enum source generator.
+	- This method can be used to get the assigned `EnumValue` attribute data by the enum's label, as a string.
+
 # v0.3.0
 
 - Created `Elegance.AspNet.Authentication`
