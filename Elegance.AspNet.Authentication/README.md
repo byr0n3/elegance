@@ -97,12 +97,21 @@ public sealed partial class Login : ComponentBase
 {
 	[CascadingParameter] public required HttpContext HttpContext { get; init; }
     
-	[Inject] public required AuthenticationService Authentication { get; init; }
+	[Inject] public required AuthenticationService<User> Authentication { get; init; }
     
 	private async Task LoginAsync() 
 	{
 		// Validate filled-in data from a form, for example…
 		// Fetch the authenticating user's data…
+        
+		// You can verify the input password like this:
+		if (!Hashing.Verify(userPasswordHash, inputPassword)) 
+		{
+			// Show error
+		}
+
+		// Additionally, when creating new users, you can hash a value like this:
+		var bytes = Hashing.Hash("password123");
 
 		var user = …;
 		// Make this `true` to make the authentication cookie not expire.
@@ -113,7 +122,7 @@ public sealed partial class Login : ComponentBase
 		// Navigate to an account dashboard, or another protected route.
 	}
     
-    private Task LogoutAsync() =>
-        this.Authentication.LogoutAsync(this.HttpContext);
+	private Task LogoutAsync() =>
+		this.Authentication.LogoutAsync(this.HttpContext);
 }
 ```

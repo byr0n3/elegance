@@ -15,7 +15,7 @@ namespace Elegance.AspNet.Authentication.Extensions
 		/// <typeparam name="TClaimsProvider">The type of the claims provider to use.</typeparam>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void AddAuth<TAuthenticatable, TClaimsProvider>(this IServiceCollection services,
-																	  System.Action<CookieAuthenticationOptions>? configure)
+																	  System.Action<CookieAuthenticationOptions>? configure = null)
 			where TAuthenticatable : class, IAuthenticatable
 			where TClaimsProvider : class, IClaimsProvider<TAuthenticatable>
 		{

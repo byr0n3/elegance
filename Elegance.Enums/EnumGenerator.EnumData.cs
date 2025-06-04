@@ -34,20 +34,30 @@ namespace Elegance.Enums
 				defaultStrValue
 			);
 
+			var enumLabelParser = EnumGenerator.GetEnumSpanParser(
+				@enum,
+				static (_, field) => $"\"{field.Label}\"",
+				static (_, field) => $"\"{field.Value}\""
+			);
+
 			builder.AppendLine($$"""
 								 	public static class {{@enum.Name}}EnumData {
 								 		{{stringValues}}
 
-								 		public static {{@enum.Name}} FromValue(System.ReadOnlySpan<char> value) {
+								 		public static {{@enum.Name}} FromValue(scoped System.ReadOnlySpan<char> value) {
 								 			{{charSpanParser}}
 								 		}
 
-								 		public static {{@enum.Name}} FromValue(System.ReadOnlySpan<byte> value) {
+								 		public static {{@enum.Name}} FromValue(scoped System.ReadOnlySpan<byte> value) {
 								 			{{byteSpanParser}}
 								 		}
 
 								 		public static string GetValue({{@enum.Name}} value) {
 								 			{{enumParser}}
+								 		}
+								 		
+								 		public static string FromLabel(scoped System.ReadOnlySpan<char> value) {
+								 			{{enumLabelParser}}
 								 		}
 								 	}
 								 """);
