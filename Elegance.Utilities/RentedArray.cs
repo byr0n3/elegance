@@ -68,8 +68,12 @@ namespace Elegance.Utilities
 		/// <param name="length">The minimal requested length.</param>
 		/// <remarks>The requested <paramref name="length"/> is the minimal amount of data to return, not the exact.</remarks>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public RentedArray(int length) =>
-			this.array = ArrayPool<T>.Shared.Rent(length);
+		public RentedArray(int length)
+		{
+			this.Length = length;
+
+			this.array = ArrayPool<T>.Shared.Rent(this.Length);
+		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public System.Span<T> Slice(int start = 0, int length = 0)
@@ -78,7 +82,7 @@ namespace Elegance.Utilities
 
 			if (length <= 0)
 			{
-				length = this.array.Length - start;
+				length = this.Length - start;
 			}
 
 			return new System.Span<T>(this.array, start, length);
@@ -91,7 +95,7 @@ namespace Elegance.Utilities
 
 			if (length <= 0)
 			{
-				length = this.array.Length;
+				length = this.Length;
 			}
 
 			return new System.Memory<T>(this.array, start, length);
@@ -104,7 +108,7 @@ namespace Elegance.Utilities
 
 			if (length <= 0)
 			{
-				length = this.array.Length;
+				length = this.Length;
 			}
 
 			return new System.ReadOnlyMemory<T>(this.array, start, length);
@@ -132,7 +136,7 @@ namespace Elegance.Utilities
 		{
 			Debug.Assert(@this.Valid);
 
-			return @this.array;
+			return @this.Slice(0, @this.Length);
 		}
 	}
 }
