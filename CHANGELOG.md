@@ -1,3 +1,8 @@
+# v0.3.2
+
+- Fixed some minor issues related to `RentedArray<T>`.
+- Added extra properties to `RentedArray<T>` for usability purposes.
+
 # v0.3.1
 
 - Added `string FromLabel(System.ReadOnlySpan<char>)` to the Enum source generator.
