@@ -68,8 +68,12 @@ namespace Elegance.Utilities
 		/// <param name="length">The minimal requested length.</param>
 		/// <remarks>The requested <paramref name="length"/> is the minimal amount of data to return, not the exact.</remarks>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public RentedArray(int length) =>
-			this.array = ArrayPool<T>.Shared.Rent(length);
+		public RentedArray(int length)
+		{
+			this.Length = length;
+
+			this.array = ArrayPool<T>.Shared.Rent(this.Length);
+		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public System.Span<T> Slice(int start = 0, int length = 0)
