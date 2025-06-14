@@ -43,6 +43,8 @@ namespace Elegance.Enums
 				builder.AppendLine(
 					// language=csharp
 					$"""
+					 #nullable enable
+
 					 using System.Collections.Frozen;
 					 using System.Collections.Generic;
 					 using System.Diagnostics.CodeAnalysis;

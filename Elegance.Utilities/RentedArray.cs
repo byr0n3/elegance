@@ -12,11 +12,30 @@ namespace Elegance.Utilities
 	{
 		private readonly T[]? array;
 
+		/// <summary>
+		/// The requested length for the buffer.
+		/// </summary>
+		public readonly int Length;
+
 		private bool Valid
 		{
 			[MemberNotNullWhen(true, nameof(this.array))]
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => this.array is not null;
+		}
+
+		/// <summary>
+		/// The actual size of the buffer.
+		/// </summary>
+		public int Capacity
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get
+			{
+				Debug.Assert(this.Valid);
+
+				return this.array.Length;
+			}
 		}
 
 		public T this[int index]
@@ -43,6 +62,11 @@ namespace Elegance.Utilities
 		{
 		}
 
+		/// <summary>
+		/// Rent a new array from the shared pool.
+		/// </summary>
+		/// <param name="length">The minimal requested length.</param>
+		/// <remarks>The requested <paramref name="length"/> is the minimal amount of data to return, not the exact.</remarks>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public RentedArray(int length) =>
 			this.array = ArrayPool<T>.Shared.Rent(length);
@@ -54,7 +78,7 @@ namespace Elegance.Utilities
 
 			if (length <= 0)
 			{
-				length = this.array.Length;
+				length = this.array.Length - start;
 			}
 
 			return new System.Span<T>(this.array, start, length);

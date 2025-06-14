@@ -3,7 +3,7 @@
 	<Import Project="../Elegance.props"/>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Elegance.Utilities\Elegance.Utilities.csproj" />
+		<ProjectReference Include="..\Elegance.Utilities\Elegance.Utilities.csproj"/>
 	</ItemGroup>
 
 </Project>
