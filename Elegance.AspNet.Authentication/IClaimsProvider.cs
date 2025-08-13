@@ -9,7 +9,7 @@ namespace Elegance.AspNet.Authentication
 	/// </summary>
 	/// <typeparam name="TAuthenticatable">The type of the authenticatable model.</typeparam>
 	public interface IClaimsProvider<in TAuthenticatable>
-		where TAuthenticatable : class, IAuthenticatable
+		where TAuthenticatable : class, IAuthenticatable<TAuthenticatable>
 	{
 		/// <summary>
 		/// Get the authentication claims for the authenticating <paramref name="user"/>.

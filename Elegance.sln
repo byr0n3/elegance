@@ -30,8 +30,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elegance.Json", "Elegance.J
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elegance.Json.Extensions", "Elegance.Json.Extensions\Elegance.Json.Extensions.csproj", "{186A9320-91BD-4736-A7D6-E8781D9AE677}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elegance.Localization", "Elegance.Localization\Elegance.Localization.csproj", "{20428DEF-7F46-43FD-A9C0-9843D10678F4}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elegance.Utilities", "Elegance.Utilities\Elegance.Utilities.csproj", "{AE6DAE3A-3AB5-42FB-9107-FE9EB7763568}"
 EndProject
 Global
@@ -76,10 +74,6 @@ Global
 		{E3653470-8E37-4853-B329-0F62DB5A3102}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3653470-8E37-4853-B329-0F62DB5A3102}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3653470-8E37-4853-B329-0F62DB5A3102}.Release|Any CPU.Build.0 = Release|Any CPU
-		{20428DEF-7F46-43FD-A9C0-9843D10678F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{20428DEF-7F46-43FD-A9C0-9843D10678F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{20428DEF-7F46-43FD-A9C0-9843D10678F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{20428DEF-7F46-43FD-A9C0-9843D10678F4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9DEC7A2A-B2DD-4A0D-AC1F-B6663AAD494A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9DEC7A2A-B2DD-4A0D-AC1F-B6663AAD494A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9DEC7A2A-B2DD-4A0D-AC1F-B6663AAD494A}.Release|Any CPU.ActiveCfg = Release|Any CPU
