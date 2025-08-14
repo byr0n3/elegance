@@ -1,10 +1,12 @@
 using System.Linq.Expressions;
+using JetBrains.Annotations;
 
 namespace Elegance.AspNet.Authentication
 {
 	/// <summary>
 	/// An authenticatable model.
 	/// </summary>
+	[PublicAPI]
 	public interface IAuthenticatable<TAuthenticatable>
 		where TAuthenticatable : class, IAuthenticatable<TAuthenticatable>
 	{
@@ -34,6 +36,11 @@ namespace Elegance.AspNet.Authentication
 		/// </summary>
 		public System.DateTimeOffset? AccessLockoutEnd { get; }
 
-		public static abstract Expression<System.Func<TAuthenticatable, bool>> Filter(string user);
+		/// <summary>
+		/// Creates an expression to find an authenticatable entity by its user identifier.
+		/// </summary>
+		/// <param name="user">The user identifier.</param>
+		/// <returns>An expression that can be used to filter a queryable collection of entities.</returns>
+		public static abstract Expression<System.Func<TAuthenticatable, bool>> FindAuthenticatable(string user);
 	}
 }

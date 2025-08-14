@@ -1,7 +1,9 @@
+using JetBrains.Annotations;
 using Microsoft.Extensions.Options;
 
 namespace Elegance.AspNet.Authentication
 {
+	[PublicAPI]
 	public sealed class AuthenticationOptions : IOptions<AuthenticationOptions>
 	{
 		/// <summary>

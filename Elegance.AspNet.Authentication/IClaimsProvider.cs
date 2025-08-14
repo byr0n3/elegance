@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading;
+using JetBrains.Annotations;
 
 namespace Elegance.AspNet.Authentication
 {
@@ -8,6 +9,7 @@ namespace Elegance.AspNet.Authentication
 	/// Provides claims for the authenticatable model of type <typeparamref name="TAuthenticatable"/>.
 	/// </summary>
 	/// <typeparam name="TAuthenticatable">The type of the authenticatable model.</typeparam>
+	[PublicAPI]
 	public interface IClaimsProvider<in TAuthenticatable>
 		where TAuthenticatable : class, IAuthenticatable<TAuthenticatable>
 	{

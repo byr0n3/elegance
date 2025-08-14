@@ -17,7 +17,7 @@ Services, models and utilities used for base authentication in ASP.NET Core appl
 </Project>
 ```
 
-2. Create your authenticatable model (usually a user):
+2. Create your authenticatable database model (usually a user):
 
 **User.cs**
 
@@ -28,12 +28,41 @@ public sealed class User : IAuthenticatable<User>
 {
 	[Column("id")] public int Id { get; init; }
 
+	[Column("username")] public required string Username { get; init; }
+
+	[Column("email")] public required string Email { get; init; }
+
 	[Column("password", TypeName = "bytea")]
 	public required byte[] Password { get; init; }
+
+	[Column("security_stamp")]
+	public string? SecurityStamp { get; }
+
+	[Column("access_failed_count")]
+	public int AccessFailedCount { get; }
+
+	[Column("access_lockout_end")]
+	public System.DateTimeOffset? AccessLockoutEnd { get; }
+
+	public static abstract Expression<System.Func<TAuthenticatable, bool>> FindAuthenticatable(string user) =>
+		static (u) => (u.Username == user) || (u.Email == user);
 }
 ```
 
-3. Create a `ClaimsProvider`:
+3. Create a `DbContext`:
+
+**AppDbContext.cs**
+
+```csharp
+using Microsoft.EntityFrameworkCore;
+
+public sealed class AppDbContext : DbContext
+{
+	public required DbSet<User> Users { get; init; }
+}
+```
+
+4. Create a `ClaimsProvider`:
 
 **UserClaimsProvider.cs**
 
@@ -51,14 +80,14 @@ public sealed class UserClaimsProvider : IClaimsProvider<User>
 
 	public async IAsyncEnumerable<Claim> GetClaimsAsync(User user, [EnumeratorCancellation] CancellationToken token)
 	{ 
-		yield return new Claim("Id", user.Id.ToString());
+		yield return new Claim("Username", user.Username);
 
 		// Optionally, fetch data from a database or another service…
 	}
 }
 ```
 
-4. Register the service on start-up:
+5. Register the service on start-up:
 
 **Program.cs**
 
@@ -69,11 +98,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // …
 
-builder.Services.AddAuth();
+builder.Services.AddAuth<User, AppDbContext, UserClaimsProvider>();
 
 // Optionally, you can add a callback as argument to configure the authentication cookie:
 
-builder.Services.AddAuth(static (options) => 
+builder.Services.AddAuth<User, AppDbContext, UserClaimsProvider>(static (options) => 
 {
 	options.AccessDeniedPath = "/404";
 	options.LoginPath = "/login";
@@ -81,9 +110,11 @@ builder.Services.AddAuth(static (options) =>
 });
 
 var app = builder.Build();
+
+app.UseAuth<User, AppDbContext, UserClaimsProvider>();
 ```
 
-5. Use the `AuthenticationService`:
+6. Use the `AuthenticationService`:
 
 **Login.razor.cs**
 
@@ -101,28 +132,24 @@ public sealed partial class Login : ComponentBase
     
 	private async Task LoginAsync() 
 	{
-		// Validate filled-in data from a form, for example…
-		// Fetch the authenticating user's data…
-        
-		// You can verify the input password like this:
-		if (!Hashing.Verify(userPasswordHash, inputPassword)) 
-		{
-			// Show error
-		}
+		var result = await this.Authentication.AuthenticateAsync(this.HttpContext, username, password, persistSession);
 
-		// Additionally, when creating new users, you can hash a value like this:
-		var bytes = Hashing.Hash("password123");
-
-		var user = …;
-		// Make this `true` to make the authentication cookie not expire.
-		var persistent = false;
-
-		await this.Authentication.LoginAsync(this.HttpContext, user, persistent);
+		// Result is one of the following;
+		// AuthenticationResult.InvalidCredentials -> the user wasn't found, or the credentials don't match the ones in the database.
+		// AuthenticationResult.TwoFactorRequired -> the user needs to fill in their 2FA code (not implemented yet).
+		// AuthenticationResult.Success -> the user filled in valid credentials and is now signed in.
 
 		// Navigate to an account dashboard, or another protected route.
+
+		// It's also possible to manually sign in a user, while validating the data yourself:
+		await this.Authentication.SignInAsync(this.HttpContext, user, persistSession);
 	}
     
 	private Task LogoutAsync() =>
 		this.Authentication.LogoutAsync(this.HttpContext);
 }
 ```
+
+## Coming soon
+
+- [ ] 2FA support

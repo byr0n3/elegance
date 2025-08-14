@@ -1,12 +1,14 @@
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
+using JetBrains.Annotations;
 
 namespace Elegance.AspNet.Authentication
 {
 	/// <summary>
 	/// Utility functions for hashing and validation.
 	/// </summary>
+	[PublicAPI]
 	public static class Hashing
 	{
 		/// <summary>

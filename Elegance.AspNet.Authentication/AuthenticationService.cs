@@ -22,7 +22,7 @@ namespace Elegance.AspNet.Authentication
 		where TAuthenticatable : class, IAuthenticatable<TAuthenticatable>
 		where TDbContext : DbContext
 	{
-		internal const string Scheme = CookieAuthenticationDefaults.AuthenticationScheme;
+		public const string Scheme = CookieAuthenticationDefaults.AuthenticationScheme;
 
 		private readonly AuthenticationOptions options;
 		private readonly IDbContextFactory<TDbContext> dbFactory;
@@ -57,7 +57,7 @@ namespace Elegance.AspNet.Authentication
 			await using (db)
 			{
 				var set = db.Set<TAuthenticatable>();
-				var where = TAuthenticatable.Filter(user);
+				var where = TAuthenticatable.FindAuthenticatable(user);
 
 				authenticatable = await set.Where(static (a) => a.AccessLockoutEnd <= System.DateTimeOffset.UtcNow)
 										   .Where(where)
