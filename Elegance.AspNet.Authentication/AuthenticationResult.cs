@@ -19,9 +19,14 @@ namespace Elegance.AspNet.Authentication
 		InvalidCredentials,
 
 		/// <summary>
-		/// Indicates that the given credentials were correct, but two-factor authentication is required to complete the login process.
+		/// Indicates that 'multifactor authentication' (MFA) is required for the user to complete the authentication process.
 		/// </summary>
-		TwoFactorRequired,
+		MfaRequired,
+
+		/// <summary>
+		/// Indicates that the account that the currently attempting to sign in has been locked.
+		/// </summary>
+		AccountLockedOut,
 
 		/// <summary>
 		/// Indicates that the authentication attempt was successful.

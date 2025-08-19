@@ -23,7 +23,9 @@ namespace Elegance.AspNet.Authentication.Extensions
 																				  System.Action<CookieAuthenticationOptions>?
 																					  configureCookie = null,
 																				  System.Action<AuthenticationOptions>?
-																					  configureAuthentication = null)
+																					  configureAuthentication = null,
+																				  System.Action<TotpOptions>?
+																					  configureTotp = null)
 			where TAuthenticatable : class, IAuthenticatable<TAuthenticatable>
 			where TDbContext : DbContext
 			where TClaimsProvider : class, IClaimsProvider<TAuthenticatable>
@@ -41,6 +43,8 @@ namespace Elegance.AspNet.Authentication.Extensions
 				builder.AddCookie();
 			}
 
+			services.AddAuthorization();
+
 			if (configureAuthentication is not null)
 			{
 				services.Configure(configureAuthentication);
@@ -52,6 +56,19 @@ namespace Elegance.AspNet.Authentication.Extensions
 
 			services.AddSingleton<IClaimsProvider<TAuthenticatable>, TClaimsProvider>()
 					.AddSingleton<AuthenticationService<TAuthenticatable, TDbContext>>();
+
+			if (configureTotp is not null)
+			{
+				services.Configure(configureTotp);
+			}
+			else
+			{
+				services.AddOptions<TotpOptions>();
+			}
+
+			services.AddSingleton<TotpService>();
+
+			services.AddMemoryCache();
 		}
 	}
 }

@@ -57,7 +57,7 @@ namespace Elegance.AspNet.Authentication.Extensions
 		/// <param name="this">The claims principal to search for the claim.</param>
 		/// <param name="claimType">The type of the claim to retrieve.</param>
 		/// <param name="result">When this method returns, contains the parsed value of the claim if found and successfully parsed; otherwise, default(T). This parameter is passed uninitialized.</param>
-		/// <typeparam name="T">The type to parse the claim value as. Must implement ISpanParsable&lt;T&gt;.</typeparam>
+		/// <typeparam name="T">The type to parse the claim value as. Must implement <see cref="System.ISpanParsable{T}"/>.</typeparam>
 		/// <returns>True if the claim was found and its value has been successfully parsed into the result parameter; otherwise, false.</returns>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool TryGetClaimValue<T>(this ClaimsPrincipal @this, string claimType, [NotNullWhen(true)] out T? result)
@@ -92,5 +92,16 @@ namespace Elegance.AspNet.Authentication.Extensions
 		public static T? GetClaimValue<T>(this ClaimsPrincipal @this, string claimType)
 			where T : System.ISpanParsable<T> =>
 			@this.TryGetClaimValue<T>(claimType, out var result) ? result : default;
+
+		/// <summary>
+		/// Retrieves the value of a required claim from the specified claims principal.
+		/// </summary>
+		/// <param name="this">The claims principal to search for the claim.</param>
+		/// <param name="claimType">The type of the claim to retrieve.</param>
+		/// <returns>The value of the claim if found; otherwise, throws an exception.</returns>
+		/// <exception cref="System.Exception">Thrown when the claim is not found in the claims principal.</exception>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static string GetRequiredClaimValue(this ClaimsPrincipal @this, string claimType) =>
+			@this.TryGetClaimValue(claimType, out var result) ? result : throw new System.Exception("Claim type not found: " + claimType);
 	}
 }

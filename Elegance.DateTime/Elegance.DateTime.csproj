@@ -1,7 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<Import Project="../Elegance.props"/>
-
 	<ItemGroup>
 		<ProjectReference Include="..\Elegance.Utilities\Elegance.Utilities.csproj"/>
 	</ItemGroup>

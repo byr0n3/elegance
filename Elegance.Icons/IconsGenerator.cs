@@ -20,11 +20,10 @@ namespace Elegance.Icons
 		{
 			var icons = context.AdditionalTextsProvider
 							   .Where(static (file) => file.Path.EndsWith(".svg", System.StringComparison.Ordinal))
-							   .Select(static (file, token) => new IconFile
-								{
-									Name = IconsGenerator.NormalizeName(Path.GetFileNameWithoutExtension(file.Path)),
-									Content = file.GetText(token)?.ToString(),
-								});
+							   .Select(static (file, token) => new IconFile(
+										   IconsGenerator.NormalizeName(Path.GetFileNameWithoutExtension(file.Path)),
+										   file.GetText(token)?.ToString()
+									   ));
 
 			context.RegisterSourceOutput(icons.Collect(), IconsGenerator.Generate);
 		}
@@ -88,7 +87,7 @@ namespace Elegance.Icons
 			}
 		}
 
-		private static string NormalizeName(System.ReadOnlySpan<char> name)
+		private static unsafe string NormalizeName(System.ReadOnlySpan<char> name)
 		{
 			System.Span<char> buffer = stackalloc char[name.Length];
 
@@ -110,14 +109,23 @@ namespace Elegance.Icons
 				written--;
 			}
 
-			return new string(buffer.Slice(0, written));
+			fixed (char* ptr = buffer)
+			{
+				return new string(ptr);
+			}
 		}
 
 		private readonly struct IconFile
 		{
-			public required string Name { get; init; }
+			public readonly string Name;
 
-			public required string? Content { get; init; }
+			public readonly string? Content;
+
+			public IconFile(string name, string? content)
+			{
+				this.Name = name;
+				this.Content = content;
+			}
 		}
 	}
 }

@@ -1,0 +1,14 @@
+@page "/account"
+@using Elegance.AspNet.Authentication.Extensions
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using Elegance.Examples.Authentication.Web.Components
+@attribute [Authorize]
+
+<h2>Signed in as: @(User.GetRequiredClaimValue("username"))</h2>
+
+<ActivateTotp User="@(User)" />
+
+<EditForm EditContext="@(new(0))" OnValidSubmit="@(SignOutAsync)" FormName="@(Account.signOutFormName)">
+	<button type="submit">Sign out</button>
+</EditForm>

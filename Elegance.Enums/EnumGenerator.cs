@@ -76,12 +76,7 @@ namespace Elegance.Enums
 			var @namespace = context.TargetSymbol.ContainingNamespace.ToDisplayString();
 			var fields = EnumGenerator.GetEnumFields((EnumDeclarationSyntax)context.TargetNode, context.SemanticModel);
 
-			return new DeclaredEnum
-			{
-				Name = name,
-				Namespace = @namespace,
-				Fields = fields,
-			};
+			return new DeclaredEnum(name, @namespace, fields);
 		}
 
 		private static List<DeclaredEnum.Field> GetEnumFields(EnumDeclarationSyntax node, SemanticModel model)
@@ -98,11 +93,7 @@ namespace Elegance.Enums
 					continue;
 				}
 
-				fields.Add(new DeclaredEnum.Field
-				{
-					Label = label,
-					Value = value,
-				});
+				fields.Add(new DeclaredEnum.Field(label, value));
 			}
 
 			return fields;
@@ -122,20 +113,33 @@ namespace Elegance.Enums
 
 		private readonly struct DeclaredEnum
 		{
-			public required string Name { get; init; }
+			public readonly string Name;
 
-			public required string Namespace { get; init; }
+			public readonly string Namespace;
 
-			public required List<Field> Fields { get; init; }
+			public readonly List<Field> Fields;
+
+			public DeclaredEnum(string name, string @namespace, List<Field> fields)
+			{
+				this.Name = name;
+				this.Namespace = @namespace;
+				this.Fields = fields;
+			}
 
 			public string FullName =>
 				$"{this.Namespace}.{this.Name}";
 
 			public readonly struct Field
 			{
-				public required string Label { get; init; }
+				public readonly string Label;
 
-				public required string Value { get; init; }
+				public readonly string Value;
+
+				public Field(string label, string value)
+				{
+					this.Label = label;
+					this.Value = value;
+				}
 			}
 		}
 	}

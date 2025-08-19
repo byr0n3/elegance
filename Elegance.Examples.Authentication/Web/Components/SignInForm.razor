@@ -1,0 +1,74 @@
+@using Elegance.AspNet.Authentication
+@using Microsoft.AspNetCore.Components.Forms
+
+<h2>Sign in</h2>
+
+@if ((authenticationStatus is not null) && (authenticationStatus != AuthenticationResult.Success))
+{
+	<div role="alert" aria-live="polite">
+		@switch (authenticationStatus)
+		{
+			case AuthenticationResult.UnknownError:
+				<span>An unknown error has occured.</span>
+				break;
+
+			case AuthenticationResult.InvalidCredentials:
+				<span>Invalid username/password combination.</span>
+				break;
+
+			case AuthenticationResult.AccountLockedOut:
+				<span>Your account has been locked due to suspicious activity.</span>
+				break;
+		}
+	</div>
+}
+
+<EditForm Model="@(SignInModel)"
+          OnValidSubmit="@(SignInAsync)"
+          FormName="@(SignInForm.signInformName)"
+          hidden="@(ShowMfaForm)">
+	<DataAnnotationsValidator />
+
+	<div style="margin-block-end: 1em;">
+		<label>
+			Username:
+			<InputText @bind-Value="@(SignInModel.Username)" />
+		</label>
+		<ValidationMessage For="@(() => SignInModel.Username)" />
+	</div>
+
+	<div style="margin-block-end: 1em;">
+		<label>
+			Password:
+			<InputText @bind-Value="@(SignInModel.Password)" type="password" />
+		</label>
+		<ValidationMessage For="@(() => SignInModel.Password)" />
+	</div>
+
+	<div style="margin-block-end: 1em;">
+		<label>
+			Stay signed in?
+			<InputCheckbox @bind-Value="@(SignInModel.Persistent)" />
+		</label>
+	</div>
+
+	<button type="submit">Sign in</button>
+</EditForm>
+
+<EditForm Model="@(MfaModel)"
+          OnValidSubmit="@(MfaAsync)"
+          FormName="@(SignInForm.mfaFormName)"
+          hidden="@(!ShowMfaForm)">
+	<DataAnnotationsValidator />
+
+	<div class="margin-block-end: 1em;">
+		<label>
+			OTP:
+			<InputText @bind-Value="@(MfaModel.Totp)" autocomplete="one-time-code" />
+		</label>
+
+		<ValidationMessage For="@(() => MfaModel.Totp)" />
+	</div>
+
+	<button type="submit">Activate</button>
+</EditForm>

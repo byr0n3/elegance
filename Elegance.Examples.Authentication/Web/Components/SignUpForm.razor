@@ -1,0 +1,19 @@
+@using Microsoft.AspNetCore.Components.Forms
+
+<h2>Sign up</h2>
+
+<EditForm Model="@(SignUpModel)" OnValidSubmit="@(SignUpAsync)" FormName="@(SignUpForm.signUpFormName)">
+	<DataAnnotationsValidator />
+
+	<label style="display: block; margin-block-end: 1em;">
+		Username:
+		<InputText @bind-Value="@(SignUpModel.Username)" />
+	</label>
+
+	<label style="display: block; margin-block-end: 1em;">
+		Password:
+		<InputText @bind-Value="@(SignUpModel.Password)" type="password" />
+	</label>
+
+	<button type="submit">Sign up</button>
+</EditForm>

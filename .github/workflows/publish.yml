@@ -17,7 +17,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 9.0.x
+          dotnet-version: 10.0.x
       - name: Set VERSION variable
         run: echo "VERSION=${GITHUB_REF/refs\/tags\/}" >> $GITHUB_ENV
       - name: Login to the GitHub NuGet registry

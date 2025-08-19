@@ -20,9 +20,9 @@ namespace Elegance.Icons
 		{
 			builder.AppendLine($"__builder.OpenElement(0, \"{this.Tag}\");");
 
-			foreach (var (key, value) in this.Attributes)
+			foreach (var pair in this.Attributes)
 			{
-				builder.AppendLine($"__builder.AddAttribute(0, \"{key}\", \"{value}\");");
+				builder.AppendLine($"__builder.AddAttribute(0, \"{pair.Key}\", \"{pair.Value}\");");
 			}
 
 			if (this.Children is not null)

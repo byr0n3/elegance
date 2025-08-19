@@ -28,6 +28,11 @@ namespace Elegance.AspNet.Authentication
 		/// </example>
 		public bool IncrementalLockoutDuration { get; set; }
 
+		/// <summary>
+		/// Gets or sets a value indicating whether 'multifactor authentication' (MFA) is enabled.
+		/// </summary>
+		public bool EnableMfa { get; set; } = true;
+
 		AuthenticationOptions IOptions<AuthenticationOptions>.Value =>
 			this;
 	}

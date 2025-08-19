@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Claims;
@@ -8,6 +9,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Elegance.AspNet.Authentication
@@ -24,14 +27,26 @@ namespace Elegance.AspNet.Authentication
 	{
 		public const string Scheme = CookieAuthenticationDefaults.AuthenticationScheme;
 
+		private readonly TotpService totp;
+		private readonly IMemoryCache cache;
+		private readonly System.TimeProvider clock;
 		private readonly AuthenticationOptions options;
 		private readonly IDbContextFactory<TDbContext> dbFactory;
 		private readonly IClaimsProvider<TAuthenticatable> claimsProvider;
+		private readonly ILogger<AuthenticationService<TAuthenticatable, TDbContext>> logger;
 
-		public AuthenticationService(IOptions<AuthenticationOptions> options,
+		public AuthenticationService(TotpService totp,
+									 IMemoryCache cache,
+									 System.TimeProvider clock,
+									 IOptions<AuthenticationOptions> options,
 									 IDbContextFactory<TDbContext> dbFactory,
-									 IClaimsProvider<TAuthenticatable> claimsProvider)
+									 IClaimsProvider<TAuthenticatable> claimsProvider,
+									 ILogger<AuthenticationService<TAuthenticatable, TDbContext>> logger)
 		{
+			this.totp = totp;
+			this.cache = cache;
+			this.clock = clock;
+			this.logger = logger;
 			this.dbFactory = dbFactory;
 			this.options = options.Value;
 			this.claimsProvider = claimsProvider;
@@ -48,8 +63,13 @@ namespace Elegance.AspNet.Authentication
 		/// A task that represents the asynchronous operation.
 		/// The task result contains an AuthenticationResult value indicating the success or failure of the authentication attempt.
 		/// </returns>
-		public async ValueTask<AuthenticationResult> AuthenticateAsync(HttpContext context, string user, string password, bool persistent)
+		public async ValueTask<AuthenticationResult> AuthenticateAsync(HttpContext context,
+																	   string user,
+																	   string password,
+																	   bool persistent)
 		{
+			var now = this.clock.GetUtcNow();
+
 			var db = await this.dbFactory.CreateDbContextAsync();
 
 			TAuthenticatable? authenticatable;
@@ -59,7 +79,7 @@ namespace Elegance.AspNet.Authentication
 				var set = db.Set<TAuthenticatable>();
 				var where = TAuthenticatable.FindAuthenticatable(user);
 
-				authenticatable = await set.Where(static (a) => a.AccessLockoutEnd <= System.DateTimeOffset.UtcNow)
+				authenticatable = await set.Where((a) => (a.AccessLockoutEnd == null) || (a.AccessLockoutEnd <= now))
 										   .Where(where)
 										   .FirstOrDefaultAsync();
 
@@ -74,13 +94,21 @@ namespace Elegance.AspNet.Authentication
 				// We should reset the authenticatable their access failed count.
 				if (Hashing.Verify(authenticatable.Password, password))
 				{
-					await queryable.ExecuteUpdateAsync(ResetAccessFailedCount);
+					// Dont reuse the `now` variable; a little bit of time can have passed since first assigning the `now` variable.
+					await queryable.ExecuteUpdateAsync(ResetAccessFailedCount(this.clock.GetUtcNow()));
+
+					// Update the `last sign in timestamp` on the previously queried entity,
+					// in case this value gets used when generating claims.
+					authenticatable.LastSignInTimestamp = now;
 				}
 				// The entered password does not match;
 				else
 				{
+					// Subtract 1 from the max attempt count so we lock at the exact moment we reached the threshold.
+					var locked = authenticatable.AccessFailedCount >= (this.options.MaxAuthenticationAttempts - 1);
+
 					// The user failed to authenticate too many times; lock them out.
-					if (authenticatable.AccessFailedCount >= this.options.MaxAuthenticationAttempts)
+					if (locked)
 					{
 						await queryable.ExecuteUpdateAsync(LockoutAuthenticatable(authenticatable.AccessFailedCount));
 					}
@@ -90,14 +118,17 @@ namespace Elegance.AspNet.Authentication
 						await queryable.ExecuteUpdateAsync(IncrementAccessFailedCount);
 					}
 
-					return AuthenticationResult.InvalidCredentials;
+					return locked ? AuthenticationResult.AccountLockedOut : AuthenticationResult.InvalidCredentials;
 				}
 			}
 
-			// @todo Check 2FA
-			if (false)
+			if (this.options.EnableMfa && authenticatable.HasMfaEnabled)
 			{
-				return AuthenticationResult.TwoFactorRequired;
+				// Store the authenticatable entity in the cache for 1 hour.
+				// The cached value will be retrieved once the user has entered their TOTP code.
+				this.cache.Set(context.Connection.Id, authenticatable, System.TimeSpan.FromHours(1));
+
+				return AuthenticationResult.MfaRequired;
 			}
 
 			await this.SignInAsync(context, authenticatable, persistent);
@@ -122,17 +153,58 @@ namespace Elegance.AspNet.Authentication
 			static void IncrementAccessFailedCount(UpdateSettersBuilder<TAuthenticatable> builder) =>
 				builder.SetProperty(static (a) => a.AccessFailedCount, static (a) => a.AccessFailedCount + 1);
 
-			static void ResetAccessFailedCount(UpdateSettersBuilder<TAuthenticatable> builder) =>
-				builder.SetProperty(static (a) => a.AccessFailedCount, 0);
+			static System.Action<UpdateSettersBuilder<TAuthenticatable>> ResetAccessFailedCount(System.DateTimeOffset? now) =>
+				(builder) => builder.SetProperty(static (a) => a.AccessFailedCount, 0)
+									.SetProperty(static (a) => a.AccessLockoutEnd, (System.DateTimeOffset?)null)
+									.SetProperty(static (a) => a.LastSignInTimestamp, now);
+		}
+
+		/// <summary>
+		/// Attempts to authenticate a user using the provided TOTP (Time-based One-Time Password) code.
+		/// </summary>
+		/// <param name="context">The current HTTP context of this request.</param>
+		/// <param name="code">The TOTP code entered by the user.</param>
+		/// <param name="persistent">Indicates whether the authentication state/cookie should be persistent.</param>
+		/// <returns>
+		/// <para>
+		/// A ValueTask that represents the asynchronous operation.
+		/// The task result contains a boolean indicating the success or failure of the authentication attempt.
+		/// </para>
+		/// <para>
+		/// This function assumes that the authenticatable entity has tried to authenticate using <see cref="AuthenticateAsync"/> before.
+		/// </para>
+		/// </returns>
+		public async ValueTask<bool> AuthenticateTotpAsync(HttpContext context, string code, bool persistent)
+		{
+			var request = this.totp.StartValidationRequest(code);
+
+			if (!this.cache.TryGetValue<TAuthenticatable>(context.Connection.Id, out var authenticatable))
+			{
+				this.logger.LogWarning("[Request:{Id}] Cache miss", context.Connection.Id);
+				return false;
+			}
+
+			Debug.Assert(authenticatable is not null);
+
+			if (!this.totp.VerifyTotpRequest(request))
+			{
+				return false;
+			}
+
+			this.cache.Remove(context.Connection.Id);
+
+			await this.SignInAsync(context, authenticatable, persistent);
+
+			return true;
 		}
 
 		/// <summary>
 		/// Signs in an authenticated user asynchronously.
 		/// </summary>
 		/// <param name="context">The current HTTP context of this request.</param>
-		/// <param name="user">The authenticated user to log in.</param>
+		/// <param name="user">The authenticated user to sign in.</param>
 		/// <param name="persistent">Indicates whether the authentication state/cookie should be persistent.</param>
-		/// <returns>A task that represents the asynchronous login operation.</returns>
+		/// <returns>A task that represents the asynchronous sign in operation.</returns>
 		public async Task SignInAsync(HttpContext context, TAuthenticatable user, bool persistent)
 		{
 			var now = System.DateTimeOffset.UtcNow;

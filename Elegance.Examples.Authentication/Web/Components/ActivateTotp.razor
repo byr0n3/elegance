@@ -1,0 +1,28 @@
+@using Microsoft.AspNetCore.Components.Forms
+
+@if (mfaEnabled)
+{
+	<p>MFA is enabled for your account. Well done!</p>
+}
+else
+{
+	<p>You haven't setup MFA yet!</p>
+
+	<a href="@(mfaUrl)">Setup</a>
+	@((MarkupString)mfaSvg)
+
+	<EditForm Model="@(Model)" OnValidSubmit="@(ActivateAsync)" FormName="@(ActivateTotp.formName)">
+		<DataAnnotationsValidator />
+
+		<div class="margin-block-end: 1em;">
+			<label>
+				OTP:
+				<InputText @bind-Value="@(Model.Code)" autocomplete="one-time-code" />
+			</label>
+
+			<ValidationMessage For="@(() => Model.Code)" />
+		</div>
+
+		<button type="submit">Activate</button>
+	</EditForm>
+}

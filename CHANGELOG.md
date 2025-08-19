@@ -1,3 +1,13 @@
+# v0.4.0
+
+- Refactored `Elegance.AspNet.Authentication`:
+	- Added `security stamp` support (deauthenticate users when their security information has changed).
+	- Added lockout support (deactivating user accounts for a limited period of time when too many failed login attempts
+	  have been made).
+	- Added MFA support.
+		- Currently, only TOTP-based authentication has been implemented.
+	- Changed the signature of the `AuthenticationService` methods for easier usage.
+
 # v0.3.2
 
 - Fixed some minor issues related to `RentedArray<T>`.
