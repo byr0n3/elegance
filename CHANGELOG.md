@@ -1,3 +1,8 @@
+# v0.5.0
+
+- Updated framework to stable `.NET 10`
+- Added `System.IServiceProvider` parameter to `IAuthenticatable.FindAuthenticatable`
+
 # v0.4.0
 
 - Refactored `Elegance.AspNet.Authentication`:
