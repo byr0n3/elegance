@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -31,25 +32,22 @@ namespace Elegance.AspNet.Authentication
 		private readonly IMemoryCache cache;
 		private readonly System.TimeProvider clock;
 		private readonly AuthenticationOptions options;
+		private readonly System.IServiceProvider services;
 		private readonly IDbContextFactory<TDbContext> dbFactory;
 		private readonly IClaimsProvider<TAuthenticatable> claimsProvider;
 		private readonly ILogger<AuthenticationService<TAuthenticatable, TDbContext>> logger;
 
-		public AuthenticationService(TotpService totp,
-									 IMemoryCache cache,
-									 System.TimeProvider clock,
-									 IOptions<AuthenticationOptions> options,
-									 IDbContextFactory<TDbContext> dbFactory,
-									 IClaimsProvider<TAuthenticatable> claimsProvider,
-									 ILogger<AuthenticationService<TAuthenticatable, TDbContext>> logger)
+		public AuthenticationService(System.IServiceProvider services)
 		{
-			this.totp = totp;
-			this.cache = cache;
-			this.clock = clock;
-			this.logger = logger;
-			this.dbFactory = dbFactory;
-			this.options = options.Value;
-			this.claimsProvider = claimsProvider;
+			this.services = services;
+
+			this.totp = services.GetRequiredService<TotpService>();
+			this.cache = services.GetRequiredService<IMemoryCache>();
+			this.clock = services.GetRequiredService<System.TimeProvider>();
+			this.dbFactory = services.GetRequiredService<IDbContextFactory<TDbContext>>();
+			this.options = services.GetRequiredService<IOptions<AuthenticationOptions>>().Value;
+			this.claimsProvider = services.GetRequiredService<IClaimsProvider<TAuthenticatable>>();
+			this.logger = services.GetRequiredService<ILogger<AuthenticationService<TAuthenticatable, TDbContext>>>();
 		}
 
 		/// <summary>
@@ -77,7 +75,7 @@ namespace Elegance.AspNet.Authentication
 			await using (db)
 			{
 				var set = db.Set<TAuthenticatable>();
-				var where = TAuthenticatable.FindAuthenticatable(user);
+				var where = TAuthenticatable.FindAuthenticatable(user, this.services);
 
 				authenticatable = await set.Where((a) => (a.AccessLockoutEnd == null) || (a.AccessLockoutEnd <= now))
 										   .Where(where)

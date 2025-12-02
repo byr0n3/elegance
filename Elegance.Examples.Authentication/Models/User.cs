@@ -23,7 +23,7 @@ namespace Elegance.Examples.Authentication.Models
 
 		[Column("mfa")] public bool HasMfaEnabled { get; init; }
 
-		public static Expression<System.Func<User, bool>> FindAuthenticatable(string user) =>
+		public static Expression<System.Func<User, bool>> FindAuthenticatable(string user, System.IServiceProvider _) =>
 			(u) => u.Username == user;
 	}
 }

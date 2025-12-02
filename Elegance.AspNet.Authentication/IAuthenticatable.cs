@@ -51,7 +51,9 @@ namespace Elegance.AspNet.Authentication
 		/// Creates an expression to find an authenticating entity by its user identifier.
 		/// </summary>
 		/// <param name="user">The user identifier.</param>
+		/// <param name="services">Collection of registered services.</param>
 		/// <returns>An expression that can be used to filter a queryable collection of entities.</returns>
-		public static abstract Expression<System.Func<TAuthenticatable, bool>> FindAuthenticatable(string user);
+		public static abstract Expression<System.Func<TAuthenticatable, bool>> FindAuthenticatable(string user,
+																								   System.IServiceProvider services);
 	}
 }
