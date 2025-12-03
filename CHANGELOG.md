@@ -2,6 +2,7 @@
 
 - Updated framework to stable `.NET 10`
 - Added `System.IServiceProvider` parameter to `IAuthenticatable.FindAuthenticatable`
+- Fixed a bug where the SecurityStamp claim never got set when a user authenticated, causing them to instantly sign out
 
 # v0.4.0
 
