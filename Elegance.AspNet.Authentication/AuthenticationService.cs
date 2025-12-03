@@ -3,6 +3,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Elegance.AspNet.Authentication.Internal;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -205,7 +206,7 @@ namespace Elegance.AspNet.Authentication
 		/// <returns>A task that represents the asynchronous sign in operation.</returns>
 		public async Task SignInAsync(HttpContext context, TAuthenticatable user, bool persistent)
 		{
-			var now = System.DateTimeOffset.UtcNow;
+			var now = this.clock.GetUtcNow();
 
 			var auth = new AuthenticationProperties
 			{
@@ -216,6 +217,11 @@ namespace Elegance.AspNet.Authentication
 			};
 
 			var identity = new ClaimsIdentity(null, AuthenticationService<TAuthenticatable, TDbContext>.Scheme);
+
+			if (user.SecurityStamp is not null)
+			{
+				identity.AddClaim(new Claim(Constants.SecurityStampClaimType, user.SecurityStamp));
+			}
 
 			await foreach (var claim in this.claimsProvider.GetClaimsAsync(user, context.RequestAborted))
 			{

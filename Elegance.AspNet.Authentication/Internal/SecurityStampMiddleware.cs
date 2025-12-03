@@ -66,19 +66,12 @@ namespace Elegance.AspNet.Authentication.Internal
 		/// <returns>A task that represents the asynchronous operation. The task result is true if the security stamp is valid; otherwise, false.</returns>
 		private async ValueTask<bool> IsSecurityStampValidAsync(int id, string value, CancellationToken token = default)
 		{
-			string? stored;
-
-			var db = await this.dbFactory.CreateDbContextAsync(token);
-
-			await using (db)
+			await using (var db = await this.dbFactory.CreateDbContextAsync(token))
 			{
-				stored = await db.Set<TAuthenticatable>()
-								 .Where((a) => a.Id == id)
-								 .Select(static (a) => a.SecurityStamp)
-								 .FirstOrDefaultAsync(token);
+				return await db.Set<TAuthenticatable>()
+							   .Where((a) => a.Id == id)
+							   .AnyAsync((a) => (a.Id == id) && (a.SecurityStamp == value), token);
 			}
-
-			return string.Equals(value, stored, System.StringComparison.Ordinal);
 		}
 	}
 }
