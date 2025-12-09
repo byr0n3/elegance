@@ -34,7 +34,6 @@ namespace Elegance.Examples.Authentication.Web.Components
 		private TotpModel Model { get; set; } = new();
 
 		private bool mfaEnabled;
-		private bool error;
 
 		private string mfaUrl = string.Empty;
 		private string mfaSvg = string.Empty;
@@ -73,7 +72,6 @@ namespace Elegance.Examples.Authentication.Web.Components
 			if (!valid)
 			{
 				this.Model.Code = null;
-				this.error = true;
 				return;
 			}
 

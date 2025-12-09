@@ -76,11 +76,11 @@ namespace Elegance.AspNet.Authentication
 			await using (db)
 			{
 				var set = db.Set<TAuthenticatable>();
-				var where = TAuthenticatable.FindAuthenticatable(user, this.services);
 
-				authenticatable = await set.Where((a) => (a.AccessLockoutEnd == null) || (a.AccessLockoutEnd <= now))
-										   .Where(where)
-										   .FirstOrDefaultAsync();
+				var query = set.Where((a) => (a.AccessLockoutEnd == null) || (a.AccessLockoutEnd <= now))
+							   .Where(TAuthenticatable.FindAuthenticatable(user, this.services));
+
+				authenticatable = await TAuthenticatable.Include(query).FirstOrDefaultAsync();
 
 				if (authenticatable is null)
 				{

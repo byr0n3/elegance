@@ -40,27 +40,45 @@ namespace Elegance.Enums
 				static (_, field) => $"\"{field.Value}\""
 			);
 
-			builder.AppendLine($$"""
-								 	public static class {{@enum.Name}}EnumData {
-								 		{{stringValues}}
+			builder.AppendLine(
+				// language=csharp
+				$$"""
+				  	public static class {{@enum.Name}}EnumData {
+				  		{{stringValues}}
 
-								 		public static {{@enum.Name}} FromValue(scoped System.ReadOnlySpan<char> value) {
-								 			{{charSpanParser}}
-								 		}
+				  		public static {{@enum.Name}} FromValue(scoped System.ReadOnlySpan<char> value) {
+				  			{{charSpanParser}}
+				  		}
 
-								 		public static {{@enum.Name}} FromValue(scoped System.ReadOnlySpan<byte> value) {
-								 			{{byteSpanParser}}
-								 		}
+				  		public static {{@enum.Name}} FromValue(scoped System.ReadOnlySpan<byte> value) {
+				  			{{byteSpanParser}}
+				  		}
 
-								 		public static string GetValue({{@enum.Name}} value) {
-								 			{{enumParser}}
-								 		}
-								 		
-								 		public static string FromLabel(scoped System.ReadOnlySpan<char> value) {
-								 			{{enumLabelParser}}
-								 		}
-								 	}
-								 """);
+				  		public static string GetValue({{@enum.Name}} value) {
+				  			{{enumParser}}
+				  		}
+				  		
+				  		public static string FromLabel(scoped System.ReadOnlySpan<char> value) {
+				  			{{enumLabelParser}}
+				  		}
+				  	}
+
+				  public static class {{@enum.Name}}Extensions
+				  {
+				  	extension({{@enum.Name}} @this)
+				  	{
+				  		public static {{@enum.Name}} FromValue(scoped System.ReadOnlySpan<char> value) => 
+				  			{{@enum.Name}}EnumData.FromValue(value);
+
+				  		public static {{@enum.Name}} FromValue(scoped System.ReadOnlySpan<byte> value) => 
+				  			{{@enum.Name}}EnumData.FromValue(value);
+
+				  		public string GetValue() =>
+				  			{{@enum.Name}}EnumData.GetValue(@this);
+				  	}
+				  }
+				  """
+			);
 		}
 
 		private static string GetValuesDictionary(DeclaredEnum @enum,

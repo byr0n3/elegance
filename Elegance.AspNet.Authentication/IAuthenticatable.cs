@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Linq.Expressions;
 using JetBrains.Annotations;
 
@@ -55,5 +56,7 @@ namespace Elegance.AspNet.Authentication
 		/// <returns>An expression that can be used to filter a queryable collection of entities.</returns>
 		public static abstract Expression<System.Func<TAuthenticatable, bool>> FindAuthenticatable(string user,
 																								   System.IServiceProvider services);
+
+		public static abstract IQueryable<TAuthenticatable> Include(IQueryable<TAuthenticatable> queryable);
 	}
 }

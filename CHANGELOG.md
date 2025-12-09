@@ -1,8 +1,10 @@
 # v0.5.0
 
-- Updated framework to stable `.NET 10`
-- Added `System.IServiceProvider` parameter to `IAuthenticatable.FindAuthenticatable`
-- Fixed a bug where the SecurityStamp claim never got set when a user authenticated, causing them to instantly sign out
+- Updated framework to stable `.NET 10`.
+- Added `System.IServiceProvider` parameter to `IAuthenticatable.FindAuthenticatable`.
+- Fixed a bug where the SecurityStamp claim never got set when a user authenticated, causing them to instantly sign out.
+- Added the abstract `Include` property to `IAuthenticatable` for loading relations while authenticating.
+- Added generated extension methods to `Elegance.Enums` for simpler usability.
 
 # v0.4.0
 

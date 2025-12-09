@@ -10,3 +10,4 @@ var person = new Person
 var json = JsonSerializer.Serialize(person, AppJsonSerializerContext.Default.Person!);
 
 System.Console.WriteLine(json);
+

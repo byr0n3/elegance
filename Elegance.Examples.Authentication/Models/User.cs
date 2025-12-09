@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Linq.Expressions;
 using Elegance.AspNet.Authentication;
 
@@ -25,5 +26,8 @@ namespace Elegance.Examples.Authentication.Models
 
 		public static Expression<System.Func<User, bool>> FindAuthenticatable(string user, System.IServiceProvider _) =>
 			(u) => u.Username == user;
+
+		public static IQueryable<User> Include(IQueryable<User> queryable) =>
+			queryable;
 	}
 }
