@@ -1,3 +1,7 @@
+# v0.5.1
+
+- Fixed a bug where `Elegance.Icons` would generate too long of names if the icon file contains a `-`.
+
 # v0.5.0
 
 - Updated framework to stable `.NET 10`.
