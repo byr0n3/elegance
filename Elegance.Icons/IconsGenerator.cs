@@ -111,7 +111,7 @@ namespace Elegance.Icons
 
 			fixed (char* ptr = buffer)
 			{
-				return new string(ptr);
+				return new string(ptr, 0, written);
 			}
 		}
 
