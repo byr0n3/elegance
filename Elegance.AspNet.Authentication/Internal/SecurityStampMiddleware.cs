@@ -2,8 +2,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Elegance.AspNet.Authentication.Extensions;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace Elegance.AspNet.Authentication.Internal
 {
@@ -18,15 +20,18 @@ namespace Elegance.AspNet.Authentication.Internal
 	{
 		private readonly RequestDelegate next;
 		private readonly IDbContextFactory<TDbContext> dbFactory;
+		private readonly CookieAuthenticationOptions cookieOptions;
 		private readonly AuthenticationService<TAuthenticatable, TDbContext> authentication;
 
 		public SecurityStampMiddleware(RequestDelegate next,
 									   IDbContextFactory<TDbContext> dbFactory,
+									   IOptions<CookieAuthenticationOptions> cookieOptions,
 									   AuthenticationService<TAuthenticatable, TDbContext> authentication)
 		{
 			this.next = next;
 			this.dbFactory = dbFactory;
 			this.authentication = authentication;
+			this.cookieOptions = cookieOptions.Value;
 		}
 
 		/// <summary>
@@ -54,6 +59,8 @@ namespace Elegance.AspNet.Authentication.Internal
 				!await this.IsSecurityStampValidAsync(id, securityStamp, context.RequestAborted))
 			{
 				await this.authentication.SignOutAsync(context);
+
+				context.Response.Redirect(this.cookieOptions.LoginPath);
 			}
 		}
 
