@@ -1,13 +1,3 @@
-﻿using System.Text.Json;
-using Elegance.Examples;
+﻿using System;
 
-var person = new Person
-{
-	Name = "John Doe",
-	Gender = Gender.Male,
-};
-
-var json = JsonSerializer.Serialize(person, AppJsonSerializerContext.Default.Person!);
-
-System.Console.WriteLine(json);
-
+Console.WriteLine("Hello world!");

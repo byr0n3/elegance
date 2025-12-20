@@ -1,4 +1,4 @@
-using System.Diagnostics;
+using System;
 using System.Runtime.CompilerServices;
 
 namespace Elegance.AspNet.Authentication.Internal
@@ -6,10 +6,11 @@ namespace Elegance.AspNet.Authentication.Internal
 	internal static class Base32
 	{
 		// Reference: https://stackoverflow.com/a/7135008
-		public static string ToUrlSafeString(scoped System.ReadOnlySpan<byte> src)
+		public static string ToUrlSafeString(scoped ReadOnlySpan<byte> src)
 		{
 			var maxLength = (int)float.Ceiling(src.Length / 5f) * 8;
-			System.Span<char> dst = stackalloc char[maxLength];
+
+			Span<char> dst = stackalloc char[maxLength];
 
 			byte next = 0;
 			byte remaining = 5;
@@ -41,7 +42,7 @@ namespace Elegance.AspNet.Authentication.Internal
 				< 26 => (char)(b + 65),
 				< 32 => (char)(b + 24),
 
-				_ => throw new System.ArgumentException("Byte is not a Base32 value.", nameof(b))
+				_ => throw new ArgumentException("Byte is not a Base32 value.", nameof(b))
 			};
 	}
 }

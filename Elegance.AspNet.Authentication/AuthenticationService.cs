@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -31,20 +32,20 @@ namespace Elegance.AspNet.Authentication
 
 		private readonly TotpService totp;
 		private readonly IMemoryCache cache;
-		private readonly System.TimeProvider clock;
+		private readonly TimeProvider clock;
 		private readonly AuthenticationOptions options;
-		private readonly System.IServiceProvider services;
+		private readonly IServiceProvider services;
 		private readonly IDbContextFactory<TDbContext> dbFactory;
 		private readonly IClaimsProvider<TAuthenticatable> claimsProvider;
 		private readonly ILogger<AuthenticationService<TAuthenticatable, TDbContext>> logger;
 
-		public AuthenticationService(System.IServiceProvider services)
+		public AuthenticationService(IServiceProvider services)
 		{
 			this.services = services;
 
 			this.totp = services.GetRequiredService<TotpService>();
 			this.cache = services.GetRequiredService<IMemoryCache>();
-			this.clock = services.GetRequiredService<System.TimeProvider>();
+			this.clock = services.GetRequiredService<TimeProvider>();
 			this.dbFactory = services.GetRequiredService<IDbContextFactory<TDbContext>>();
 			this.options = services.GetRequiredService<IOptions<AuthenticationOptions>>().Value;
 			this.claimsProvider = services.GetRequiredService<IClaimsProvider<TAuthenticatable>>();
@@ -125,7 +126,7 @@ namespace Elegance.AspNet.Authentication
 			{
 				// Store the authenticatable entity in the cache for 1 hour.
 				// The cached value will be retrieved once the user has entered their TOTP code.
-				this.cache.Set(context.Connection.Id, authenticatable, System.TimeSpan.FromHours(1));
+				this.cache.Set(context.Connection.Id, authenticatable, TimeSpan.FromHours(1));
 
 				return AuthenticationResult.MfaRequired;
 			}
@@ -134,7 +135,7 @@ namespace Elegance.AspNet.Authentication
 
 			return AuthenticationResult.Success;
 
-			System.Action<UpdateSettersBuilder<TAuthenticatable>> LockoutAuthenticatable(int accessFailedCount)
+			Action<UpdateSettersBuilder<TAuthenticatable>> LockoutAuthenticatable(int accessFailedCount)
 			{
 				// If incremental lockout duration is enabled,
 				// the length of the lockout is dependent on how many times authentication has failed.
@@ -144,7 +145,7 @@ namespace Elegance.AspNet.Authentication
 				// We need to add 1 to the count, as `count` starts at 0.
 				count++;
 
-				var value = System.DateTimeOffset.UtcNow + (count * this.options.AuthenticationLockoutDuration);
+				var value = DateTimeOffset.UtcNow + (count * this.options.AuthenticationLockoutDuration);
 
 				return (builder) => builder.SetProperty(static (a) => a.AccessLockoutEnd, value);
 			}
@@ -152,7 +153,7 @@ namespace Elegance.AspNet.Authentication
 			static void IncrementAccessFailedCount(UpdateSettersBuilder<TAuthenticatable> builder) =>
 				builder.SetProperty(static (a) => a.AccessFailedCount, static (a) => a.AccessFailedCount + 1);
 
-			static System.Action<UpdateSettersBuilder<TAuthenticatable>> ResetAccessFailedCount(System.DateTimeOffset? now) =>
+			static Action<UpdateSettersBuilder<TAuthenticatable>> ResetAccessFailedCount(DateTimeOffset? now) =>
 				(builder) => builder.SetProperty(static (a) => a.AccessFailedCount, 0)
 									.SetProperty(static (a) => a.AccessLockoutEnd, (System.DateTimeOffset?)null)
 									.SetProperty(static (a) => a.LastSignInTimestamp, now);

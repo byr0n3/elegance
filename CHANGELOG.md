@@ -1,3 +1,9 @@
+# v0.6.0
+
+- Removed some old, unused packages.
+- Refactored `System.*` usage to use proper using-statements.
+- Bumped dependency-package versions.
+
 # v0.5.1
 
 - Fixed a bug where `Elegance.Icons` would generate too long of names if the icon file contains a `-`.

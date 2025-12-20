@@ -9,7 +9,6 @@
 	<ItemGroup>
 		<AdditionalFiles Include="icons/*.svg"/>
 
-		<ProjectReference Include="..\Elegance.Json\Elegance.Json.csproj"/>
 		<ProjectReference Include="..\Elegance.Utilities\Elegance.Utilities.csproj"/>
 
 		<ProjectReference Include="..\Elegance.Enums\Elegance.Enums.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>

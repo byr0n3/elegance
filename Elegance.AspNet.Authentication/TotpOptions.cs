@@ -1,5 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using System.Security.Cryptography;
 using System.Text;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Options;

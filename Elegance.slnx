@@ -1,0 +1,18 @@
+<Solution>
+	<Folder Name="/Solution Items/">
+		<File Path=".gitignore"/>
+		<File Path="Directory.Build.props"/>
+		<File Path="CHANGELOG.md"/>
+		<File Path="README.md"/>
+	</Folder>
+	<Folder Name="/Workflows/">
+		<File Path=".github/workflows/publish.yml"/>
+	</Folder>
+	<Project Path="Elegance.AspNet.Authentication/Elegance.AspNet.Authentication.csproj"/>
+	<Project Path="Elegance.Enums/Elegance.Enums.csproj"/>
+	<Project Path="Elegance.Examples/Elegance.Examples.csproj"/>
+	<Project Path="Elegance.Examples.Authentication/Elegance.Examples.Authentication.csproj"/>
+	<Project Path="Elegance.Extensions/Elegance.Extensions.csproj"/>
+	<Project Path="Elegance.Icons/Elegance.Icons.csproj"/>
+	<Project Path="Elegance.Utilities/Elegance.Utilities.csproj"/>
+</Solution>

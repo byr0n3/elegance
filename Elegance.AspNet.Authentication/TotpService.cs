@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -19,9 +20,9 @@ namespace Elegance.AspNet.Authentication
 	public sealed class TotpService
 	{
 		private readonly TotpOptions options;
-		private readonly System.TimeProvider clock;
+		private readonly TimeProvider clock;
 
-		public TotpService(System.TimeProvider clock, IOptions<TotpOptions> options)
+		public TotpService(TimeProvider clock, IOptions<TotpOptions> options)
 		{
 			this.clock = clock;
 			this.options = options.Value;
@@ -39,7 +40,7 @@ namespace Elegance.AspNet.Authentication
 			var queryParameters = new List<KeyValuePair<string, string?>>
 			{
 				new("secret", Base32.ToUrlSafeString(this.options.SecretKeyBytes)),
-				new("issuer", this.options.Issuer is not null ? System.Uri.EscapeDataString(this.options.Issuer) : null),
+				new("issuer", this.options.Issuer is not null ? Uri.EscapeDataString(this.options.Issuer) : null),
 				// @todo Hard-coded extension method
 				new("algorithm", this.options.HashAlgorithm.ToString()),
 				new("digits", this.options.Size.ToString("N0", NumberFormatInfo.InvariantInfo)),
@@ -54,7 +55,7 @@ namespace Elegance.AspNet.Authentication
 					   .Append(':');
 			}
 
-			builder.Append(System.Uri.EscapeDataString(user));
+			builder.Append(Uri.EscapeDataString(user));
 			builder.Append(QueryString.Create(queryParameters).ToUriComponent());
 
 			var result = builder.ToString();
@@ -71,7 +72,7 @@ namespace Elegance.AspNet.Authentication
 		/// It's important to create a validation request right as the OTP-validation request begins.
 		/// This ensures that the filled-in TOTP value gets validated for the correct time window.
 		/// </remarks>
-		public TotpValidationRequest StartValidationRequest(System.ReadOnlySpan<char> totp) =>
+		public TotpValidationRequest StartValidationRequest(ReadOnlySpan<char> totp) =>
 			new(this.clock.GetUtcNow(), totp);
 
 		/// <summary>

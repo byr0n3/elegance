@@ -20,7 +20,7 @@ namespace Elegance.Examples.Authentication.Services
 				 .IsUnique();
 
 				// The following property conversion registrations are only needed for SQLite;
-				// SQLite doesn't have a built-in type for System.DateTimeOffset, and the EF-Core driver doesn't automagically handle conversion.
+				// SQLite doesn't have a built-in type for DateTimeOffset, and the EF-Core driver doesn't automagically handle conversion.
 
 				u.Property(static (u) => u.LastSignInTimestamp)
 				 .HasConversion(new DateTimeOffsetToBinaryConverter());

@@ -1,3 +1,4 @@
+using System;
 using System.Buffers;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
@@ -27,7 +28,7 @@ namespace Elegance.AspNet.Authentication
 		/// <param name="password">The password to validate. Must contain at least one uppercase letter, one number, and one special character.</param>
 		/// <returns>True if the password meets the minimum strength requirements; otherwise, false.</returns>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static bool ValidateStrength(scoped System.ReadOnlySpan<char> password) =>
+		public static bool ValidateStrength(scoped ReadOnlySpan<char> password) =>
 			// Minimum length
 			(password.Length >= PasswordStrength.MinLength) &&
 			// At least one capital character
@@ -44,7 +45,7 @@ namespace Elegance.AspNet.Authentication
 		/// <param name="search">The search values containing characters to look for.</param>
 		/// <returns>True if any character from 'search' is found in 'value'; otherwise, false.</returns>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private static bool Has(scoped System.ReadOnlySpan<char> value, SearchValues<char> search) =>
-			System.MemoryExtensions.IndexOfAny(value, search) != -1;
+		private static bool Has(scoped ReadOnlySpan<char> value, SearchValues<char> search) =>
+			value.IndexOfAny(search) != -1;
 	}
 }

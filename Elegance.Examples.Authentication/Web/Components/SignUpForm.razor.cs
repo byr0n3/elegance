@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Elegance.AspNet.Authentication;
@@ -34,7 +35,7 @@ namespace Elegance.Examples.Authentication.Web.Components
 				{
 					Username = this.SignUpModel.Username,
 					Password = Hashing.Hash(this.SignUpModel.Password),
-					SecurityStamp = System.Guid.NewGuid().ToString(),
+					SecurityStamp = Guid.NewGuid().ToString(),
 				});
 
 				saved = await db.SaveChangesAsync();

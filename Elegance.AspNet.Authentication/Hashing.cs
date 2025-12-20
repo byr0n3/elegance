@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
@@ -26,7 +27,7 @@ namespace Elegance.AspNet.Authentication
 		/// </summary>
 		/// <param name="value">The value to generate a hash for.</param>
 		/// <returns>The generated SHA256 representation.</returns>
-		public static byte[] Hash(scoped System.ReadOnlySpan<char> value)
+		public static byte[] Hash(scoped ReadOnlySpan<char> value)
 		{
 			var hash = new byte[Hashing.HashSize];
 
@@ -41,7 +42,7 @@ namespace Elegance.AspNet.Authentication
 		/// <param name="value">The value to generate a hash for.</param>
 		/// <param name="dst">The target location to write the hash to.</param>
 		/// <returns>The number of bytes written to <paramref name="dst"/></returns>
-		public static int Hash(scoped System.ReadOnlySpan<char> value, scoped System.Span<byte> dst)
+		public static int Hash(scoped ReadOnlySpan<char> value, scoped Span<byte> dst)
 		{
 			Debug.Assert(dst.Length >= Hashing.HashSize);
 
@@ -62,7 +63,7 @@ namespace Elegance.AspNet.Authentication
 		/// <param name="hash">The SHA256 to compare to.</param>
 		/// <param name="value">The value to compare to the <paramref name="hash"/>.</param>
 		/// <returns><see langword="true"/> if the SHA256 representation of <paramref name="value"/> is equal to the given <paramref name="hash"/>, <see langword="false"/> otherwise.</returns>
-		public static bool Verify(scoped System.ReadOnlySpan<byte> hash, scoped System.ReadOnlySpan<char> value)
+		public static bool Verify(scoped ReadOnlySpan<byte> hash, scoped ReadOnlySpan<char> value)
 		{
 			// The length of the subkey should be based off of hashed password for compatibility reasons
 			var inputSubKeyLength = (hash.Length - Hashing.saltLength);
@@ -73,14 +74,14 @@ namespace Elegance.AspNet.Authentication
 			var subKey = hash.Slice(Hashing.saltLength);
 
 			// The subkey from input, generated using salt from hashed password
-			System.Span<byte> inputSubKey = stackalloc byte[inputSubKeyLength];
+			Span<byte> inputSubKey = stackalloc byte[inputSubKeyLength];
 			Hashing.GenerateSubKey(value, salt, inputSubKey);
 
-			return System.MemoryExtensions.SequenceEqual(subKey, inputSubKey);
+			return subKey.SequenceEqual(inputSubKey);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private static void GenerateSubKey(System.ReadOnlySpan<char> value, System.ReadOnlySpan<byte> salt, System.Span<byte> dst) =>
+		private static void GenerateSubKey(ReadOnlySpan<char> value, ReadOnlySpan<byte> salt, Span<byte> dst) =>
 			Rfc2898DeriveBytes.Pbkdf2(value, salt, dst, 100, HashAlgorithmName.SHA256);
 	}
 }

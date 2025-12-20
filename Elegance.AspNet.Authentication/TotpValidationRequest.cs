@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.InteropServices;
 
 namespace Elegance.AspNet.Authentication
@@ -16,11 +17,11 @@ namespace Elegance.AspNet.Authentication
 		/// <summary>
 		/// Gets the user-provided Time-based One-Time Password (TOTP) code as a read-only span of characters.
 		/// </summary>
-		public readonly System.ReadOnlySpan<char> Totp;
+		public readonly ReadOnlySpan<char> Totp;
 
-		internal TotpValidationRequest(System.DateTimeOffset timestamp, System.ReadOnlySpan<char> totp)
+		internal TotpValidationRequest(DateTimeOffset timestamp, ReadOnlySpan<char> totp)
 		{
-			this.Timestamp = (timestamp.Ticks - System.DateTimeOffset.UnixEpoch.Ticks) / System.TimeSpan.TicksPerSecond;
+			this.Timestamp = (timestamp.Ticks - DateTimeOffset.UnixEpoch.Ticks) / TimeSpan.TicksPerSecond;
 			this.Totp = totp;
 		}
 	}

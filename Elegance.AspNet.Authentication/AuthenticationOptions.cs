@@ -1,3 +1,4 @@
+using System;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Options;
 
@@ -14,7 +15,7 @@ namespace Elegance.AspNet.Authentication
 		/// <summary>
 		/// Gets or sets the duration for which an account is locked out after exceeding the maximum number of authentication attempts.
 		/// </summary>
-		public System.TimeSpan AuthenticationLockoutDuration { get; set; } = System.TimeSpan.FromHours(1);
+		public TimeSpan AuthenticationLockoutDuration { get; set; } = TimeSpan.FromHours(1);
 
 		/// <summary>
 		/// Gets or sets a value indicating whether the lockout duration should increase every time it gets triggered.

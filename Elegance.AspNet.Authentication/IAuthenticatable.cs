@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 using JetBrains.Annotations;
@@ -30,7 +31,7 @@ namespace Elegance.AspNet.Authentication
 		/// Gets the timestamp indicating when the entity last signed in.
 		/// </summary>
 		/// <remarks>The property setter is required to update the timestamp of an authenticating entity.</remarks>
-		public System.DateTimeOffset? LastSignInTimestamp { get; set; }
+		public DateTimeOffset? LastSignInTimestamp { get; set; }
 
 		/// <summary>
 		/// The amount of times authentication has failed for the authenticating entity.
@@ -41,7 +42,7 @@ namespace Elegance.AspNet.Authentication
 		/// <summary>
 		/// Gets the date and time, as an offset from Coordinated Universal Time (UTC), at which the account lockout for this instance ends.
 		/// </summary>
-		public System.DateTimeOffset? AccessLockoutEnd { get; }
+		public DateTimeOffset? AccessLockoutEnd { get; }
 
 		/// <summary>
 		/// Gets a value indicating whether 'multifactor authentication' (MFA) is enabled for the authenticating entity.
@@ -54,8 +55,7 @@ namespace Elegance.AspNet.Authentication
 		/// <param name="user">The user identifier.</param>
 		/// <param name="services">Collection of registered services.</param>
 		/// <returns>An expression that can be used to filter a queryable collection of entities.</returns>
-		public static abstract Expression<System.Func<TAuthenticatable, bool>> FindAuthenticatable(string user,
-																								   System.IServiceProvider services);
+		public static abstract Expression<Func<TAuthenticatable, bool>> FindAuthenticatable(string user, IServiceProvider services);
 
 		public static abstract IQueryable<TAuthenticatable> Include(IQueryable<TAuthenticatable> queryable);
 	}
