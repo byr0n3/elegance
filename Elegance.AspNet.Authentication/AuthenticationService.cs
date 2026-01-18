@@ -78,8 +78,7 @@ namespace Elegance.AspNet.Authentication
 			{
 				var set = db.Set<TAuthenticatable>();
 
-				var query = set.Where((a) => (a.AccessLockoutEnd == null) || (a.AccessLockoutEnd <= now))
-							   .Where(TAuthenticatable.FindAuthenticatable(user, this.services));
+				var query = set.Where(TAuthenticatable.FindAuthenticatable(user, this.services));
 
 				authenticatable = await TAuthenticatable.Include(query).FirstOrDefaultAsync();
 
@@ -88,17 +87,23 @@ namespace Elegance.AspNet.Authentication
 					return AuthenticationResult.InvalidCredentials;
 				}
 
+				if ((authenticatable.AccessLockoutEnd is not null) && (authenticatable.AccessLockoutEnd >= now))
+				{
+					return AuthenticationResult.AccountLockedOut;
+				}
+
 				var queryable = set.Where((a) => a.Id == authenticatable.Id);
 
 				// If the entered password matches the hash in the database, authenticating was successful.
 				// We should reset the authenticatable their access failed count.
 				if (Hashing.Verify(authenticatable.Password, password))
 				{
-					// Dont reuse the `now` variable; a little bit of time can have passed since first assigning the `now` variable.
+					// Don't reuse the `now` variable; a little bit of time can have passed since first assigning the `now` variable.
 					await queryable.ExecuteUpdateAsync(ResetAccessFailedCount(this.clock.GetUtcNow()));
 
-					// Update the `last sign in timestamp` on the previously queried entity,
-					// in case this value gets used when generating claims.
+					// Update the reset properties on the previously queried entity, in case these value gets used when generating claims.
+					authenticatable.AccessFailedCount = 0;
+					authenticatable.AccessLockoutEnd = null;
 					authenticatable.LastSignInTimestamp = now;
 				}
 				// The entered password does not match;

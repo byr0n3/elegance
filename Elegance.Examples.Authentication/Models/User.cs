@@ -19,9 +19,9 @@ namespace Elegance.Examples.Authentication.Models
 
 		[Column("last_sign_in_timestamp")] public DateTimeOffset? LastSignInTimestamp { get; set; }
 
-		[Column("access_failed_count")] public int AccessFailedCount { get; init; }
+		[Column("access_failed_count")] public int AccessFailedCount { get; set; }
 
-		[Column("access_lockout_end")] public DateTimeOffset? AccessLockoutEnd { get; init; }
+		[Column("access_lockout_end")] public DateTimeOffset? AccessLockoutEnd { get; set; }
 
 		[Column("mfa")] public bool HasMfaEnabled { get; init; }
 

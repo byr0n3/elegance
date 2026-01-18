@@ -1,3 +1,8 @@
+# v0.6.1
+
+- Fixed a bug where the `AuthenticationService` would never return `AuthenticationResult.AccountLockedOut` when an
+  account is locked out.
+
 # v0.6.0
 
 - Removed some old, unused packages.

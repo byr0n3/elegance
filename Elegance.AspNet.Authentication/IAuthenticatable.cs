@@ -37,12 +37,12 @@ namespace Elegance.AspNet.Authentication
 		/// The amount of times authentication has failed for the authenticating entity.
 		/// </summary>
 		/// <remarks>This value should be reset to <c>0</c> whenever the entity successfully authenticated.</remarks>
-		public int AccessFailedCount { get; }
+		public int AccessFailedCount { get; set; }
 
 		/// <summary>
 		/// Gets the date and time, as an offset from Coordinated Universal Time (UTC), at which the account lockout for this instance ends.
 		/// </summary>
-		public DateTimeOffset? AccessLockoutEnd { get; }
+		public DateTimeOffset? AccessLockoutEnd { get; set; }
 
 		/// <summary>
 		/// Gets a value indicating whether 'multifactor authentication' (MFA) is enabled for the authenticating entity.
