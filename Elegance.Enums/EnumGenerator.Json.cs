@@ -35,6 +35,9 @@ namespace Elegance.Enums
 
 				  public sealed class Json{{@enum.Name}}Converter : JsonConverter<{{@enum.Name}}>
 				  {
+				  		public Json{{@enum.Name}}Converter() {
+				  		}
+
 				  		public override {{@enum.Name}} Read(ref Utf8JsonReader reader, System.Type _, JsonSerializerOptions __)
 				  		{
 				  			if (reader.TokenType != JsonTokenType.String)

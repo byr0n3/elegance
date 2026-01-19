@@ -2,6 +2,7 @@
 
 - Fixed a bug where the `AuthenticationService` would never return `AuthenticationResult.AccountLockedOut` when an
   account is locked out.
+- Added a default constructor to `JsonConverter`s generated using `Elegance.Enums`.
 
 # v0.6.0
 
